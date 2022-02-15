@@ -1,852 +1,93 @@
 {
 	"info": {
-		"_postman_id": "a5eb5447-f4ad-489b-b5c8-7d8737c28e2b",
-		"name": "Homework_3",
+		"_postman_id": "6f16adc9-62eb-4135-aaae-cc0142adf636",
+		"name": "Postman_HW_3*",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "/login",
+			"name": "currency",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"var response = JSON.parse(responseBody);\r",
-							"console.log(response.token);\r",
-							"// добавил переменные в окружение\r",
-							"pm.environment.set(\"url\", \"http://162.55.220.72:5005\");\r",
-							"pm.environment.set(\"age\", 30);\r",
-							"pm.environment.set(\"name\", \"Dima\");\r",
-							"pm.environment.set(\"salary\", 350);\r",
+							"var My_array = pm.response.json();\r",
+							"var passArr = [];\r",
+							"var failArr = [];\r",
+							"var count = 0;\r",
 							"\r",
-							"// Приходящий токен необходимо передать во все остальные запросы.\r",
-							"var get_token = response.token;\r",
-							"pm.environment.set(\"token\", get_token);\r",
-							"\r",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "login",
-						"value": "dima",
-						"type": "text"
-					},
-					{
-						"key": "password",
-						"value": "dima111",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": []
-				},
-				"url": {
-					"raw": "{{url}}/login",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/user_info",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"// Тесты:\r",
-							"// 1) Статус код 200\r",
-							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"\r",
-							"var response =JSON.parse(responseBody);\r",
-							"var request = JSON.parse(request.data)\r",
-							"console.log(request.salary)\r",
-							"console.log(response)\r",
-							"\r",
-							"\r",
-							"// 2) Проверка структуры json в ответе. <<<<<  схему сделал через валидатор https://jsonschema.net/\r",
-							"\r",
-							"var schema = {\r",
-							"    \"properties\": {\r",
-							"    \"person\": {\"type\":\"object\"},\r",
-							"    \"qa_salary_after_12_months\": {\"type\":\"number\"},\r",
-							"    \"qa_salary_after_6_months\": {\"type\":\"number\"},\r",
-							"    \"start_qa_salary\": {\"type\":\"number\"}\r",
-							"} }\r",
-							"\r",
-							"pm.test('Schema is valid', function () {\r",
-							"    pm.expect(tv4.validate(response, schema)).to.be.true;\r",
-							"});\r",
-							"\r",
-							"// 3) В ответе указаны коэффициенты умножения salary, напишите тесты по проверке правильности результата перемножения на коэффициент.\r",
-							"pm.test(\"Correct qa_salary_after_6_months \", function () {\r",
-							"       pm.expect(response.qa_salary_after_6_months).to.eql(request.salary*2);\r",
-							"})\r",
-							"\r",
-							"pm.test(\"Correct qa_salary_after_12_months \", function () {\r",
-							"       pm.expect(response.qa_salary_after_12_months).to.eql(request.salary*2.9);\r",
-							"})\r",
-							"\r",
-							"pm.test(\"Correct u_salary_1_5_year \", function () {\r",
-							"       pm.expect(response.person.u_salary_1_5_year).to.eql(request.salary*4);\r",
-							"})\r",
-							"\r",
-							"// 4) Достать значение из поля 'u_salary_1.5_year' и передать в поле salary запроса http://162.55.220.72:5005/get_test_user <<<<< задал переменную в окружение\r",
-							"\r",
-							"pm.environment.set(\"u_salary_1_5_year\", response.person.u_salary_1_5_year);\r",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"age\": 30 ,\r\n    \"salary\" : 350 ,\r\n    \"name\" : \"Dima\" ,\r\n    \"auth_token\" : \"{{token}}\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{url}}/user_info",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"user_info"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/get_test_user",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"// 1) Статус код 200\r",
-							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"\r",
-							"var response =JSON.parse(responseBody);\r",
-							"var request = request.data;\r",
-							"// 2) Проверка структуры json в ответе. <<<<<  схему сделал через валидатор https://jsonschema.net/\r",
-							"var schema = {\r",
-							"    \"$schema\": \"http://json-schema.org/draft-07/schema\",\r",
-							"    \"$id\": \"http://example.com/example.json\",\r",
-							"    \"type\": \"object\",\r",
-							"    \"title\": \"The root schema\",\r",
-							"    \"description\": \"The root schema comprises the entire JSON document.\",\r",
-							"    \"default\": {},\r",
-							"    \"examples\": [\r",
-							"        {\r",
-							"            \"age\": \"30\",\r",
-							"            \"family\": {\r",
-							"                \"children\": [\r",
-							"                    [\r",
-							"                        \"Alex\",\r",
-							"                        24\r",
-							"                    ],\r",
-							"                    [\r",
-							"                        \"Kate\",\r",
-							"                        12\r",
-							"                    ]\r",
-							"                ],\r",
-							"                \"u_salary_1_5_year\": 6400\r",
-							"            },\r",
-							"            \"name\": \"Dima\",\r",
-							"            \"salary\": 1600\r",
-							"        }\r",
-							"    ],\r",
-							"    \"required\": [\r",
-							"        \"age\",\r",
-							"        \"family\",\r",
-							"        \"name\",\r",
-							"        \"salary\"\r",
-							"    ],\r",
-							"    \"properties\": {\r",
-							"        \"age\": {\r",
-							"            \"$id\": \"#/properties/age\",\r",
-							"            \"type\": \"string\",\r",
-							"            \"title\": \"The age schema\",\r",
-							"            \"description\": \"An explanation about the purpose of this instance.\",\r",
-							"            \"default\": \"\",\r",
-							"            \"examples\": [\r",
-							"                \"30\"\r",
-							"            ]\r",
-							"        },\r",
-							"        \"family\": {\r",
-							"            \"$id\": \"#/properties/family\",\r",
-							"            \"type\": \"object\",\r",
-							"            \"title\": \"The family schema\",\r",
-							"            \"description\": \"An explanation about the purpose of this instance.\",\r",
-							"            \"default\": {},\r",
-							"            \"examples\": [\r",
-							"                {\r",
-							"                    \"children\": [\r",
-							"                        [\r",
-							"                            \"Alex\",\r",
-							"                            24\r",
-							"                        ],\r",
-							"                        [\r",
-							"                            \"Kate\",\r",
-							"                            12\r",
-							"                        ]\r",
-							"                    ],\r",
-							"                    \"u_salary_1_5_year\": 6400\r",
-							"                }\r",
-							"            ],\r",
-							"            \"required\": [\r",
-							"                \"children\",\r",
-							"                \"u_salary_1_5_year\"\r",
-							"            ],\r",
-							"            \"properties\": {\r",
-							"                \"children\": {\r",
-							"                    \"$id\": \"#/properties/family/properties/children\",\r",
-							"                    \"type\": \"array\",\r",
-							"                    \"title\": \"The children schema\",\r",
-							"                    \"description\": \"An explanation about the purpose of this instance.\",\r",
-							"                    \"default\": [],\r",
-							"                    \"examples\": [\r",
-							"                        [\r",
-							"                            [\r",
-							"                                \"Alex\",\r",
-							"                                24\r",
-							"                            ],\r",
-							"                            [\r",
-							"                                \"Kate\",\r",
-							"                                12\r",
-							"                            ]\r",
-							"                        ]\r",
-							"                    ],\r",
-							"                    \"additionalItems\": true,\r",
-							"                    \"items\": {\r",
-							"                        \"$id\": \"#/properties/family/properties/children/items\",\r",
-							"                        \"anyOf\": [\r",
-							"                            {\r",
-							"                                \"$id\": \"#/properties/family/properties/children/items/anyOf/0\",\r",
-							"                                \"type\": \"array\",\r",
-							"                                \"title\": \"The first anyOf schema\",\r",
-							"                                \"description\": \"An explanation about the purpose of this instance.\",\r",
-							"                                \"default\": [],\r",
-							"                                \"examples\": [\r",
-							"                                    [\r",
-							"                                        \"Alex\",\r",
-							"                                        24\r",
-							"                                    ]\r",
-							"                                ],\r",
-							"                                \"additionalItems\": true,\r",
-							"                                \"items\": {\r",
-							"                                    \"$id\": \"#/properties/family/properties/children/items/anyOf/0/items\",\r",
-							"                                    \"anyOf\": [\r",
-							"                                        {\r",
-							"                                            \"$id\": \"#/properties/family/properties/children/items/anyOf/0/items/anyOf/0\",\r",
-							"                                            \"type\": \"string\",\r",
-							"                                            \"title\": \"The first anyOf schema\",\r",
-							"                                            \"description\": \"An explanation about the purpose of this instance.\",\r",
-							"                                            \"default\": \"\",\r",
-							"                                            \"examples\": [\r",
-							"                                                \"Alex\"\r",
-							"                                            ]\r",
-							"                                        },\r",
-							"                                        {\r",
-							"                                            \"$id\": \"#/properties/family/properties/children/items/anyOf/0/items/anyOf/1\",\r",
-							"                                            \"type\": \"integer\",\r",
-							"                                            \"title\": \"The second anyOf schema\",\r",
-							"                                            \"description\": \"An explanation about the purpose of this instance.\",\r",
-							"                                            \"default\": 0,\r",
-							"                                            \"examples\": [\r",
-							"                                                24\r",
-							"                                            ]\r",
-							"                                        }\r",
-							"                                    ]\r",
-							"                                }\r",
-							"                            },\r",
-							"                            {\r",
-							"                                \"$id\": \"#/properties/family/properties/children/items/anyOf/1\",\r",
-							"                                \"type\": \"array\",\r",
-							"                                \"title\": \"The second anyOf schema\",\r",
-							"                                \"description\": \"An explanation about the purpose of this instance.\",\r",
-							"                                \"default\": [],\r",
-							"                                \"examples\": [\r",
-							"                                    [\r",
-							"                                        \"Kate\",\r",
-							"                                        12\r",
-							"                                    ]\r",
-							"                                ],\r",
-							"                                \"additionalItems\": true,\r",
-							"                                \"items\": {\r",
-							"                                    \"$id\": \"#/properties/family/properties/children/items/anyOf/1/items\",\r",
-							"                                    \"anyOf\": [\r",
-							"                                        {\r",
-							"                                            \"$id\": \"#/properties/family/properties/children/items/anyOf/1/items/anyOf/0\",\r",
-							"                                            \"type\": \"string\",\r",
-							"                                            \"title\": \"The first anyOf schema\",\r",
-							"                                            \"description\": \"An explanation about the purpose of this instance.\",\r",
-							"                                            \"default\": \"\",\r",
-							"                                            \"examples\": [\r",
-							"                                                \"Kate\"\r",
-							"                                            ]\r",
-							"                                        },\r",
-							"                                        {\r",
-							"                                            \"$id\": \"#/properties/family/properties/children/items/anyOf/1/items/anyOf/1\",\r",
-							"                                            \"type\": \"integer\",\r",
-							"                                            \"title\": \"The second anyOf schema\",\r",
-							"                                            \"description\": \"An explanation about the purpose of this instance.\",\r",
-							"                                            \"default\": 0,\r",
-							"                                            \"examples\": [\r",
-							"                                                12\r",
-							"                                            ]\r",
-							"                                        }\r",
-							"                                    ]\r",
-							"                                }\r",
-							"                            }\r",
-							"                        ]\r",
-							"                    }\r",
-							"                },\r",
-							"                \"u_salary_1_5_year\": {\r",
-							"                    \"$id\": \"#/properties/family/properties/u_salary_1_5_year\",\r",
-							"                    \"type\": \"integer\",\r",
-							"                    \"title\": \"The u_salary_1_5_year schema\",\r",
-							"                    \"description\": \"An explanation about the purpose of this instance.\",\r",
-							"                    \"default\": 0,\r",
-							"                    \"examples\": [\r",
-							"                        6400\r",
-							"                    ]\r",
-							"                }\r",
-							"            },\r",
-							"            \"additionalProperties\": false\r",
-							"        },\r",
-							"        \"name\": {\r",
-							"            \"$id\": \"#/properties/name\",\r",
-							"            \"type\": \"string\",\r",
-							"            \"title\": \"The name schema\",\r",
-							"            \"description\": \"An explanation about the purpose of this instance.\",\r",
-							"            \"default\": \"\",\r",
-							"            \"examples\": [\r",
-							"                \"Dima\"\r",
-							"            ]\r",
-							"        },\r",
-							"        \"salary\": {\r",
-							"            \"$id\": \"#/properties/salary\",\r",
-							"            \"type\": \"integer\",\r",
-							"            \"title\": \"The salary schema\",\r",
-							"            \"description\": \"An explanation about the purpose of this instance.\",\r",
-							"            \"default\": 0,\r",
-							"            \"examples\": [\r",
-							"                1600\r",
-							"            ]\r",
-							"        }\r",
-							"    },\r",
-							"    \"additionalProperties\": true\r",
-							"}\r",
-							"\r",
-							"pm.test('Schema is valid', () => {\r",
-							"    pm.response.to.have.jsonSchema(schema);\r",
-							"});\r",
-							"\r",
-							"console.log(postman.getEnvironmentVariable(\"name\"))\r",
-							"// 3) Проверить что занчение поля name = значению переменной name из окружения\r",
-							"pm.test('Correct name', function () {\r",
-							"    pm.expect(response.name).to.eql(postman.getEnvironmentVariable(\"name\")) ;\r",
-							"});\r",
-							"// 4) Проверить что занчение поля age в ответе соответсвует отправленному в запросе значению поля age \r",
-							"pm.test('Correct age', function () {\r",
-							"    pm.expect(response.age).to.eql(request.age) ;\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "age",
-							"value": "{{age}}",
-							"type": "text"
-						},
-						{
-							"key": "name",
-							"value": "{{name}}",
-							"type": "text"
-						},
-						{
-							"key": "salary",
-							"value": "{{u_salary_1_5_year}}",
-							"type": "text"
-						},
-						{
-							"key": "auth_token",
-							"value": "{{token}}",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{url}}/get_test_user",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"get_test_user"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/new_data",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"// 1) Статус код 200\r",
-							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"var response =JSON.parse(responseBody);\r",
-							"var request = request.data;\r",
-							"\r",
-							"// 2) Проверка структуры json в ответе. <<<<<  схему сделал через валидатор https://jsonschema.net/\r",
-							"var schema = {\r",
-							"    \"$schema\": \"http://json-schema.org/draft-07/schema\",\r",
-							"    \"$id\": \"http://example.com/example.json\",\r",
-							"    \"type\": \"object\",\r",
-							"    \"title\": \"The root schema\",\r",
-							"    \"description\": \"The root schema comprises the entire JSON document.\",\r",
-							"    \"default\": {},\r",
-							"    \"examples\": [\r",
-							"        {\r",
-							"            \"age\": 30,\r",
-							"            \"name\": \"Dima\",\r",
-							"            \"salary\": [\r",
-							"                1600,\r",
-							"                \"3200\",\r",
-							"                \"4800\"\r",
-							"            ]\r",
-							"        }\r",
-							"    ],\r",
-							"    \"required\": [\r",
-							"        \"age\",\r",
-							"        \"name\",\r",
-							"        \"salary\"\r",
-							"    ],\r",
-							"    \"properties\": {\r",
-							"        \"age\": {\r",
-							"            \"$id\": \"#/properties/age\",\r",
-							"            \"type\": \"number\",\r",
-							"            \"title\": \"The age schema\",\r",
-							"            \"description\": \"An explanation about the purpose of this instance.\",\r",
-							"            \"default\": 0,\r",
-							"            \"examples\": [\r",
-							"                30\r",
-							"            ]\r",
-							"        },\r",
-							"        \"name\": {\r",
-							"            \"$id\": \"#/properties/name\",\r",
-							"            \"type\": \"string\",\r",
-							"            \"title\": \"The name schema\",\r",
-							"            \"description\": \"An explanation about the purpose of this instance.\",\r",
-							"            \"default\": \"\",\r",
-							"            \"examples\": [\r",
-							"                \"Dima\"\r",
-							"            ]\r",
-							"        },\r",
-							"        \"salary\": {\r",
-							"            \"$id\": \"#/properties/salary\",\r",
-							"            \"type\": \"array\",\r",
-							"            \"title\": \"The salary schema\",\r",
-							"            \"description\": \"An explanation about the purpose of this instance.\",\r",
-							"            \"default\": [],\r",
-							"            \"examples\": [\r",
-							"                [\r",
-							"                    1600,\r",
-							"                    \"3200\"\r",
-							"                ]\r",
-							"            ],\r",
-							"            \"additionalItems\": true,\r",
-							"            \"items\": {\r",
-							"                \"$id\": \"#/properties/salary/items\",\r",
-							"                \"anyOf\": [\r",
-							"                    {\r",
-							"                        \"$id\": \"#/properties/salary/items/anyOf/0\",\r",
-							"                        \"type\": \"integer\",\r",
-							"                        \"title\": \"The first anyOf schema\",\r",
-							"                        \"description\": \"An explanation about the purpose of this instance.\",\r",
-							"                        \"default\": 0,\r",
-							"                        \"examples\": [\r",
-							"                            1600\r",
-							"                        ]\r",
-							"                    },\r",
-							"                    {\r",
-							"                        \"$id\": \"#/properties/salary/items/anyOf/1\",\r",
-							"                        \"type\": \"string\",\r",
-							"                        \"title\": \"The second anyOf schema\",\r",
-							"                        \"description\": \"An explanation about the purpose of this instance.\",\r",
-							"                        \"default\": \"\",\r",
-							"                        \"examples\": [\r",
-							"                            \"3200\",\r",
-							"                            \"4800\"\r",
-							"                        ]\r",
-							"                    }\r",
-							"                ]\r",
-							"            }\r",
-							"        }\r",
-							"    },\r",
-							"    \"additionalProperties\": false\r",
-							"}\r",
-							"pm.test('Schema is valid', function () {\r",
-							"    pm.expect(tv4.validate(true, true, schema)).to.be.true ;\r",
-							"});\r",
-							"\r",
-							"// 3) В ответе указаны коэффициенты умножения salary, напишите тесты по проверке правильности результата перемножения на коэффициент. \r",
-							"pm.test(\"Correct salary [1]\", function () {\r",
-							"       pm.expect(+response.salary[1]).to.eql(request.salary*2) ;\r",
-							"})\r",
-							"pm.test(\"Correct salary [2]\", function () {\r",
-							"       pm.expect(+response.salary[2]).to.eql(request.salary*3) ;\r",
-							"})\r",
-							"\r",
-							"// 4) проверить, что 2-й элемент массива salary больше 1-го и 0-го <<<<< все элементы в response поэтому сравниваем из response \r",
-							"pm.test(\"salary[0] less salary[2]\", function () {\r",
-							"       pm.expect(+response.salary[0]).to.lessThan(+response.salary[2]) ;\r",
-							"})\r",
-							"\r",
-							"\r",
-							"pm.test(\"salary[1] less salary[2]\", function () {\r",
-							"       pm.expect(+response.salary[1]).to.lessThan(+response.salary[2]) ;\r",
-							"})\r",
-							"\r",
-							"\r",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "age",
-							"value": "{{age}}",
-							"type": "text"
-						},
-						{
-							"key": "salary",
-							"value": "{{salary}}",
-							"type": "text"
-						},
-						{
-							"key": "name",
-							"value": "{{name}}",
-							"type": "text"
-						},
-						{
-							"key": "auth_token",
-							"value": "{{token}}",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{url}}/new_data",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"new_data"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/test_pet_info",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"// Тесты:\r",
-							"// 1) Статус код 200\r",
-							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"var response =JSON.parse(responseBody);\r",
-							"var request = request.data;\r",
-							"console.log(request.name)\r",
-							"\r",
-							"// 2) Проверка структуры json в ответе. <<<<<< схему написал сам т.к. с сайта очень большую выдавало\r",
-							"const schema = {\r",
-							"    \"properties\": {\r",
-							"    \"age\": {\"type\":\"integer\"},\r",
-							"    \"daily_food\": {\"type\":\"number\"},\r",
-							"    \"daily_sleep\": {\"type\":\"number\"},\r",
-							"    \"name\": {\"type\":\"string\"}\r",
-							"},\r",
-							"    \"additionalProperties\":false,\r",
-							"}\r",
-							"\r",
-							"pm.test('Schema is valid', () => {\r",
-							"    pm.response.to.have.jsonSchema(schema);\r",
-							"});\r",
-							"\r",
-							"// 3) В ответе указаны коэффициенты умножения weight, напишите тесты по проверке правильности результата перемножения на коэффициент. \r",
-							"// ( 'daily_food':weight * 0.012,\r",
-							"//  'daily_sleep': weight * 2.5) \r",
-							"\r",
-							"pm.test(\"Correct daily_food\", function () {\r",
-							"        pm.expect(response.daily_food).to.eql(request.weight*0.012);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Correct daily_sleep\", function () {\r",
-							"        pm.expect(response.daily_sleep).to.eql(request.weight*2.5);\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "age",
-							"value": "{{age}}",
-							"type": "text"
-						},
-						{
-							"key": "weight",
-							"value": "84",
-							"type": "text"
-						},
-						{
-							"key": "name",
-							"value": "{{name}}",
-							"type": "text"
-						},
-						{
-							"key": "auth_token",
-							"value": "{{token}}",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{url}}/test_pet_info",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"test_pet_info"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/currency",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"// Тесты:\r",
-							"// 1) Можете взять любой объект из присланного списка, используйте js random.\r",
-							"// В объекте возьмите Cur_ID и передать через окружение в следующий запрос.\r",
-							"var response =JSON.parse(responseBody);\r",
-							"\r",
-							"console.log(jsonDataResponse)\r",
-							"var request = request.data;\r",
-							"// задаем переменной рандомное число от 1 до 510\r",
-							"pm.environment.set(\"Cur_ID\", _.random(1, 510))\r",
-							"// выводим в консоли название всех валют и Cur_ID который они имеют\r",
-							"for (var k in response ) {\r",
-							"    console.log('Cur_Abbreviation: ' + response[k].Cur_Abbreviation + '\\n' + 'Валюта: ' + response[k].Cur_Name + ' имеет Cur_ID = ' + response[k].Cur_ID  )\r",
-							"   }\r",
-							"\r",
-							"\r",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "auth_token",
-							"value": "{{token}}",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{url}}/currency",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"currency"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/curr_byn",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"// Тесты:\r",
-							"// 1) Статус код 200\r",
-							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"\r",
-							"var resp =JSON.parse(responseBody);\r",
-							"// 2) Проверка структуры json в ответе. <<<<<< схему написал сам \r",
-							"const schema = {\r",
-							"    \"properties\": {\r",
-							"    \"Cur_Abbreviation\": {\"type\":\"string\"},\r",
-							"    \"Cur_ID\": {\"type\":\"integer\"},\r",
-							"    \"Cur_Name\": {\"type\":\"string\"},\r",
-							"    \"Cur_OfficialRate\": {\"type\":\"number\"},\r",
-							"    \"Cur_Scale\": {\"type\":\"integer\"},\r",
-							"    \"Date\": {\"type\":\"string\"}\r",
-							"    },\r",
-							"    \"additionalProperties\":false,\r",
-							"}\r",
-							"\r",
-							"pm.test('Schema is valid', () => {\r",
-							"    pm.response.to.have.jsonSchema(schema);\r",
-							"});\r",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "auth_token",
-							"value": "{{token}}",
-							"type": "text"
-						},
-						{
-							"key": "curr_code",
-							"value": "{{Cur_ID}}",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{url}}/curr_byn",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"curr_byn"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/currency ***",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var jsonDataResponse = pm.response.json();\r",
-							"\r",
-							"\r",
-							"// 2) итерировать список валют\r",
-							"// 3) в каждой итерации отправлять запрос на сервер для получения курса каждой валюты\r",
-							"// 4) если возвращается 500 код, переходим к следующей итреации\r",
-							"// 5) если получаем 200 код, проверяем response json на наличие поля    \r",
-							"// 6) если поле есть, пишем в консоль инфу про фалюту в виде response\r",
-							"// {\r",
-							"//     \"Cur_Abbreviation\": str\r",
-							"//     \"Cur_ID\": int,\r",
-							"//     \"Cur_Name\": str,\r",
-							"//     \"Cur_OfficialRate\": float,\r",
-							"//     \"Cur_Scale\": int,\r",
-							"//     \"Date\": str\r",
-							"// }\r",
-							"// 7) переходим к следующей итерации\r",
-							"\r",
-							"for (let  k in jsonDataResponse ) {\r",
+							"for (var i = 0; i < My_array.length; i++){\r",
 							"    \r",
-							"    pm.sendRequest(\r",
-							"    {url: 'http://162.55.220.72:5005/curr_byn',\r",
-							"    method: 'POST',\r",
-							"    header: { 'Content-Type': 'multipart/form-data' },\r",
-							"    body: {\r",
-							"      mode: 'formdata',\r",
-							"      formdata: [\r",
-							"        {key: \"auth_token\", value: pm.environment.get(\"token\"), disabled: false},\r",
-							"        {key: \"curr_code\", value: jsonDataResponse[k].Cur_ID , disabled: false}\r",
-							"      ]\r",
+							"    pm.sendRequest({\r",
+							"        \r",
+							"        url: \"http://162.55.220.72:5005/curr_byn\", \r",
+							"        method: 'POST',\r",
+							"        header: {\r",
+							"            'Accept': 'application/json',\r",
+							"            'Content-Type': 'application/x-www-form-urlencoded'\r",
+							"        },\r",
+							"        body: {\r",
+							"            mode: 'formdata',\r",
+							"            formdata: [\r",
+							"                {key: \"auth_token\", value: pm.environment.get(\"token\"), disabled: false},\r",
+							"                {key: \"curr_code\", value: My_array[i].Cur_ID, disabled: false},\r",
+							"            ]\r",
+							"        }\r",
+							"    },\r",
+							"\r",
+							"    function (err, res) {\r",
+							"        \r",
+							"        count += 1;        \r",
+							"\r",
+							"        if (res.code==200) {\r",
+							"            JS_data = res.json();\r",
+							"            passArr.push(JS_data);\r",
+							"        }\r",
+							"        else {\r",
+							"            failArr.push(My_array[count])\r",
+							"        }\r",
+							"\r",
+							"    //---Закончили слать реквесты и проходим по нашим массивам\r",
+							"    if (count == My_array.length) {\r",
+							"        \r",
+							"        console.log(\"===START===\");\r",
+							"        \r",
+							"        //+Сортировка массива\r",
+							"        failArr.sort(function(a, b){\r",
+							"            return a.Cur_ID-b.Cur_ID\r",
+							"        })        \r",
+							"        \r",
+							"        passArr.sort(function(a, b){\r",
+							"             return a.Cur_ID-b.Cur_ID\r",
+							"        })        \r",
+							"        //-\r",
+							"\r",
+							"        //+Выводим массив по не найденным курсам\r",
+							"        console.log(\"Не найдено курсов валют -\", failArr.length)\r",
+							"        for (var i = 0; i < failArr.length; i++) {\r",
+							"            console.log(\"№\", i+1, \"Cur_ID=\", failArr[i].Cur_ID, \"Cur_Abbreviation=\", failArr[i].Cur_Abbreviation, \"Cur_Name=\", failArr[i].Cur_Name)\r",
+							"        }\r",
+							"        //-\r",
+							"\r",
+							"        //+Выводим массив с найденными курсами\r",
+							"        console.log(\"Найдено курсов валют -\", passArr.length)\r",
+							"        for (var i = 0; i < passArr.length; i++) {\r",
+							"            console.log(\"№\", i+1, \"Cur_ID=\", passArr[i].Cur_ID, \"Cur_Abbreviation=\", passArr[i].Cur_Abbreviation, \"Cur_Name=\", passArr[i].Cur_Name, \"Cur_OfficialRate=\", passArr[i].Cur_OfficialRate, \"Cur_Scale=\", passArr[i].Cur_Scale, \"Date cur=\", passArr[i].Date)\r",
+							"        }        \r",
+							"        //-\r",
+							"        console.log(\"===FINISH===\")\r",
 							"    }\r",
-							"  }, function (err, response) { \r",
-							"if (response.code == 200  ) { \r",
-							"            // так можем вывести ответ в виде JSON\r",
-							"            console.log(response.json()),\r",
-							"            // так можем вывести ответ в виде списка\r",
-							"            console.log('\\n'+'Cur_Abbreviation = ' + response.json().Cur_Abbreviation + '\\n' + 'Cur_ID  = ' + response.json().Cur_ID + '\\n' + 'Cur_Name = ' + response.json().Cur_Name + '\\n' +  'Cur_OfficialRate = ' + response.json().Cur_OfficialRate + '\\n' + 'Cur_Scale = ' + response.json().Cur_Scale + '\\n' + 'Date = ' + response.json().Date   )} \r",
-							"else { console.log( 'Валюта с Cur_ID = ' + jsonDataResponse[k].Cur_ID +  ' не найдена' + '\\n' + 'Переходим к следующему запросу');           \r",
-							"            return; }\r",
-							"})\r",
-							"  }\r",
+							"    });\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
 							""
 						],
 						"type": "text/javascript"
